@@ -1,0 +1,24 @@
+#root {
+  ext-align: center;
+    display: flex ;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    justify-content: space-between;
+    align-items: stretch;
+}
+
+body {
+  background: url(./pirate-background.jpg);
+  background-size: cover;
+}
+
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+

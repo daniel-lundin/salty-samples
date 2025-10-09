@@ -1,0 +1,89 @@
+import "./App.css";
+import { SamplePlayer } from "./SamplePlayer.tsx";
+import { useEffect, useState } from "react";
+
+import skeppsKlockaSample from "./assets/skeppsklocka.mp3";
+import knarrSample from "./assets/knarr.mp3";
+import vindSample from "./assets/vind.mp3";
+import kanonSample from "./assets/kanon.mp3";
+
+const skeppsKlocka = new SamplePlayer(skeppsKlockaSample);
+const knarr = new SamplePlayer(knarrSample);
+const vind = new SamplePlayer(vindSample);
+const kanon = new SamplePlayer(kanonSample);
+knarr.toggleLooping();
+vind.toggleLooping();
+
+const oneShots = [
+  { player: skeppsKlocka, name: "Klocka" },
+  {
+    player: kanon,
+    name: "Kanon",
+  },
+];
+const loops = [
+  {
+    player: knarr,
+    name: "Knarr",
+  },
+  {
+    player: vind,
+    name: "Vind",
+  },
+];
+
+function App() {
+  const [loopsPlaying, setLoopsPlaying] = useState<boolean[]>(
+    loops.map(() => false),
+  );
+  useEffect(() => {
+    oneShots.forEach(({ player }) => {
+      player.load();
+    });
+    loops.forEach(({ player }) => {
+      player.load();
+    });
+  }, []);
+
+  return (
+    <>
+      <header>
+        <h1>SaltySamples</h1>
+      </header>
+      <div className="container">
+        <div className="card">
+          <h2>Ljud</h2>
+          {oneShots.map(({ player, name }) => (
+            <button key={name} onClick={() => player.play()}>
+              {name}
+            </button>
+          ))}
+        </div>
+        <div className="card">
+          <h2>Backgrunder</h2>
+          {loops.map(({ player, name }, index) => (
+            <button
+              key={name}
+              className={loopsPlaying[index] ? "playing" : ""}
+              onClick={() => {
+                const isPlaying = loopsPlaying[index];
+                if (isPlaying) {
+                  player.stopAll();
+                } else {
+                  player.resumeContextIfNeeded().then(() => player.play());
+                }
+                const newLoopsPlaying = [...loopsPlaying];
+                newLoopsPlaying[index] = !isPlaying;
+                setLoopsPlaying(newLoopsPlaying);
+              }}
+            >
+              {name}
+            </button>
+          ))}
+        </div>
+      </div>
+    </>
+  );
+}
+
+export default App;
