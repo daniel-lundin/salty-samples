@@ -4,6 +4,7 @@ import react from "@vitejs/plugin-react";
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  base: "/salty-samples/",
   plugins: [
     react(),
     VitePWA({
@@ -12,7 +13,6 @@ export default defineConfig({
       filename: "sw.ts",
       registerType: "autoUpdate",
       injectRegister: false,
-      base: "/salty-samples/",
 
       pwaAssets: {
         disabled: false,
