@@ -3,18 +3,21 @@ import { SamplePlayer } from "./SamplePlayer.tsx";
 import { useEffect, useState } from "react";
 
 import skeppsKlockaSample from "./assets/skeppsklocka.mp3";
-import knarrSample from "./assets/knarr.mp3";
-import vindSample from "./assets/vind.mp3";
 import kanonSample from "./assets/kanon.mp3";
-import temaSample from "./assets/tema-loop.mp3";
 import toapapperSample from "./assets/toapapper.mp3";
+import gladPiratSample from "./assets/gladpirat.mp3";
+
+import vindSample from "./assets/vind.mp3";
+import knarrSample from "./assets/knarr.mp3";
+import temaSample from "./assets/tema-loop.mp3";
 
 const skeppsKlocka = new SamplePlayer(skeppsKlockaSample);
-const knarr = new SamplePlayer(knarrSample);
-const vind = new SamplePlayer(vindSample);
-
 const kanon = new SamplePlayer(kanonSample);
 const toapapper = new SamplePlayer(toapapperSample);
+const gladPirat = new SamplePlayer(gladPiratSample);
+
+const knarr = new SamplePlayer(knarrSample);
+const vind = new SamplePlayer(vindSample);
 const temaLoop = new SamplePlayer(temaSample);
 knarr.toggleLooping();
 vind.toggleLooping();
@@ -29,6 +32,10 @@ const oneShots = [
   {
     player: toapapper,
     name: "Arg pirat",
+  },
+  {
+    player: gladPirat,
+    name: "Glad pirat",
   },
 ];
 const loops = [
