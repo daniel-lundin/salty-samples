@@ -107,6 +107,8 @@ button {
 
 .section button {
   margin-right: 1rem;
+  margin-bottom: 1rem;
+  width: 45%;
 }
 
 .section-header {

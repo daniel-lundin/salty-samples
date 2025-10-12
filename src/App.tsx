@@ -6,13 +6,16 @@ import skeppsKlockaSample from "./assets/skeppsklocka.mp3";
 import knarrSample from "./assets/knarr.mp3";
 import vindSample from "./assets/vind.mp3";
 import kanonSample from "./assets/kanon.mp3";
+import temaSample from "./assets/tema-loop.mp3";
 
 const skeppsKlocka = new SamplePlayer(skeppsKlockaSample);
 const knarr = new SamplePlayer(knarrSample);
 const vind = new SamplePlayer(vindSample);
 const kanon = new SamplePlayer(kanonSample);
+const temaLoop = new SamplePlayer(temaSample);
 knarr.toggleLooping();
 vind.toggleLooping();
+temaLoop.toggleLooping();
 
 const oneShots = [
   { player: skeppsKlocka, name: "Klocka" },
@@ -29,6 +32,10 @@ const loops = [
   {
     player: vind,
     name: "Vind",
+  },
+  {
+    player: temaLoop,
+    name: "Tema",
   },
 ];
 
