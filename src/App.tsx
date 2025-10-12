@@ -103,13 +103,44 @@ function App() {
                   setLoopsPlaying(newLoopsPlaying);
                 }}
               >
-                {loopsPlaying[index] ? "⏸" : "▶"} {name}
+                {loopsPlaying[index] ? <PauseIcon /> : <PlayIcon />} {name}
               </button>
             ))}
           </div>
         </div>
       </div>
     </>
+  );
+}
+
+function PlayIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width="16"
+      height="16"
+      fill="currentColor"
+      aria-label="Play"
+    >
+      <polygon points="16,8 56,32 16,56" />
+    </svg>
+  );
+}
+
+function PauseIcon() {
+  return (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 64 64"
+      width="16"
+      height="16"
+      fill="currentColor"
+      aria-label="Pause"
+    >
+      <rect x="16" y="8" width="10" height="48" rx="2" />
+      <rect x="38" y="8" width="10" height="48" rx="2" />
+    </svg>
   );
 }
 

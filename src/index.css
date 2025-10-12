@@ -61,6 +61,7 @@ h1 {
 }
 
 button {
+  position: relative;
   font-family: "Cinzel", Georgia, serif;
   font-weight: 700;
   font-size: 1.1rem;
@@ -84,6 +85,12 @@ button {
       transparent 6px
     ),
     linear-gradient(145deg, #8b5a2b, #5a3718);
+}
+
+button svg {
+  position: absolute;
+  left: 10px;
+  top: 15px;
 }
 
 
