@@ -51,16 +51,25 @@ function App() {
         <h1>SaltySamples</h1>
       </header>
       <div className="container">
-        <div className="card">
-          <h2>Ljud</h2>
+        <div className="section">
+          <div className="section-header">
+            <div className="rope-line"></div>
+            <h2>Ljud</h2>
+            <div className="rope-line"></div>
+          </div>
           {oneShots.map(({ player, name }) => (
             <button key={name} onClick={() => player.play()}>
               {name}
             </button>
           ))}
         </div>
-        <div className="card">
-          <h2>Backgrunder</h2>
+
+        <div className="section">
+          <div className="section-header">
+            <div className="rope-line"></div>
+            <h2>Bakgrunder</h2>
+            <div className="rope-line"></div>
+          </div>
           {loops.map(({ player, name }, index) => (
             <button
               key={name}
@@ -77,7 +86,7 @@ function App() {
                 setLoopsPlaying(newLoopsPlaying);
               }}
             >
-              {name}
+              {loopsPlaying[index] ? "⏸" : "▶"} {name}
             </button>
           ))}
         </div>
