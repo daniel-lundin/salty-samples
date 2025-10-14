@@ -79,6 +79,12 @@ export function startGhostSinging() {
   //   const frequency = valueToSpookyScale(value);
   //   oscillator.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.01);
   // }, 1000);
+  return () => {
+    oscillator.stop();
+    lfo.stop();
+    audioCtx.close();
+    console.log("Stopped ghost song.");
+  };
 }
 
 function valueToSpookyScale(value: number) {

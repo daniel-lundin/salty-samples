@@ -1,6 +1,6 @@
 import "./App.css";
 import { SamplePlayer } from "./SamplePlayer.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import skeppsKlockaSample from "./assets/skeppsklocka.mp3";
 import kanonSample from "./assets/kanon.mp3";
@@ -67,6 +67,16 @@ function App() {
     });
   }, []);
 
+  const ghostSinging = useRef<() => void | null>(null);
+  function toggleGhostSinging() {
+    if (ghostSinging.current) {
+      ghostSinging.current();
+      ghostSinging.current = null;
+    } else {
+      ghostSinging.current = startGhostSinging();
+    }
+  }
+
   return (
     <>
       <header>
@@ -116,7 +126,7 @@ function App() {
             ))}
             <button
               onClick={() => {
-                startGhostSinging();
+                toggleGhostSinging();
               }}
             >
               Spöksång
