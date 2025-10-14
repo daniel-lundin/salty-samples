@@ -57,8 +57,8 @@ export function startGhostSinging() {
               console.log(
                 `Orientation: alpha=${e.alpha} beta=${e.beta} gamma=${e.gamma}`,
               );
-            if (e.gamma) {
-              currentValue = ((e.gamma + 360) % 360) / 360; // Normalize to 0 - 1
+            if (e.beta) {
+              currentValue = ((e.beta + 360) % 360) / 360; // Normalize to 0 - 1
               const frequency = valueToSpookyScale(currentValue);
               oscillator.frequency.setTargetAtTime(
                 frequency,
