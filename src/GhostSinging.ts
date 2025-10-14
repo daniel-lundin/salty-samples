@@ -51,6 +51,7 @@ export function startGhostSinging() {
       .then((response: string) => {
         if (response === "granted") {
           window.addEventListener("deviceorientation", (e) => {
+            console.log("alpha, gamma, beta", e.alpha, e.beta, e.gamma);
             if (e.alpha) {
               currentValue = (e.alpha % 360) / 360; // Normalize to 0 - 1
               const frequency = valueToSpookyScale(currentValue);
