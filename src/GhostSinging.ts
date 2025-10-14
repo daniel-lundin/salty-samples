@@ -50,10 +50,15 @@ export function startGhostSinging() {
     DeviceOrientationEvent.requestPermission()
       .then((response: string) => {
         if (response === "granted") {
+          let i = 0;
           window.addEventListener("deviceorientation", (e) => {
-            console.log("alpha, gamma, beta", e.alpha, e.beta, e.gamma);
-            if (e.alpha) {
-              currentValue = (e.alpha % 360) / 360; // Normalize to 0 - 1
+            i++;
+            if (i % 20 === 0)
+              console.log(
+                `Orientation: alpha=${e.alpha} beta=${e.beta} gamma=${e.gamma}`,
+              );
+            if (e.gamma) {
+              currentValue = ((e.gamma + 360) % 360) / 360; // Normalize to 0 - 1
               const frequency = valueToSpookyScale(currentValue);
               oscillator.frequency.setTargetAtTime(
                 frequency,
