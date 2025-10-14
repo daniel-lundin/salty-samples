@@ -42,15 +42,21 @@ export function startGhostSinging() {
 
   oscillator.connect(audioCtx.destination);
 
-  window.addEventListener("deviceorientation", (e) => {
-    if (e.alpha) {
-      currentValue = (e.alpha % 360) / 360; // Normalize to 0 - 1
-      const frequency = valueToSpookyScale(currentValue);
-      oscillator.frequency.setTargetAtTime(
-        frequency,
-        audioCtx.currentTime,
-        0.01,
-      );
+  DeviceOrientationEvent.requestPermission().then((response) => {
+    if (response === "granted") {
+      window.addEventListener("deviceorientation", (e) => {
+        if (e.alpha) {
+          currentValue = (e.alpha % 360) / 360; // Normalize to 0 - 1
+          const frequency = valueToSpookyScale(currentValue);
+          oscillator.frequency.setTargetAtTime(
+            frequency,
+            audioCtx.currentTime,
+            0.01,
+          );
+        }
+      });
+    } else {
+      console.log("Device orientation permission denied.");
     }
   });
 
