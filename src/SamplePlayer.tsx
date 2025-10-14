@@ -23,6 +23,8 @@ export class SamplePlayer {
     const source = this.audioContext.createBufferSource();
     source.buffer = this.audioBuffer;
     source.loop = this.isLooping;
+    source.loopEnd = this.audioBuffer.duration - 0.01; // Slightly before the end to avoid clicks
+    source.loopStart = 0.01;
     source.connect(this.audioContext.destination);
     source.start(0);
 

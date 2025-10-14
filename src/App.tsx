@@ -10,6 +10,7 @@ import gladPiratSample from "./assets/gladpirat.mp3";
 import vindSample from "./assets/vind.mp3";
 import knarrSample from "./assets/knarr.mp3";
 import temaSample from "./assets/tema-loop.mp3";
+import { startGhostSong } from "./GhostSong.ts";
 
 const skeppsKlocka = new SamplePlayer(skeppsKlockaSample);
 const kanon = new SamplePlayer(kanonSample);
@@ -113,6 +114,13 @@ function App() {
                 {loopsPlaying[index] ? <PauseIcon /> : <PlayIcon />} {name}
               </button>
             ))}
+            <button
+              onClick={() => {
+                startGhostSong();
+              }}
+            >
+              Spöksång
+            </button>
           </div>
         </div>
       </div>
