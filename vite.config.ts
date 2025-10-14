@@ -1,14 +1,12 @@
 import { VitePWA } from "vite-plugin-pwa";
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
-import basicSsl from "@vitejs/plugin-basic-ssl";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/salty-samples/",
   plugins: [
     react(),
-    basicSsl({}),
     VitePWA({
       strategies: "injectManifest",
       srcDir: "src",
