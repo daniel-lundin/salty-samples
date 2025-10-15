@@ -24,25 +24,37 @@ const notes = [
   27.5 * 2,
   29.14 * 2,
   30.87 * 2,
+  16.35 * 4,
+  17.32 * 4,
+  18.35 * 4,
+  19.45 * 4,
+  20.6 * 4,
+  21.83 * 4,
+  23.12 * 4,
+  24.5 * 4,
+  25.96 * 4,
+  27.5 * 4,
+  29.14 * 4,
+  30.87 * 4,
 ];
 
 const spookyScale = [
-  3,
-  5,
-  6,
   9,
-  10,
   11,
-  14,
+  12,
   15,
-  12 + 3,
-  12 + 5,
-  12 + 6,
+  16,
+  17,
+  20,
+  21,
   12 + 9,
-  12 + 10,
   12 + 11,
-  12 + 14,
+  12 + 12,
   12 + 15,
+  12 + 16,
+  12 + 17,
+  12 + 20,
+  12 + 21,
 ];
 
 export function startGhostSinging() {
@@ -64,7 +76,7 @@ export function startGhostSinging() {
   ); // Default frequency
   gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
   lfo.frequency.setValueAtTime(5, audioCtx.currentTime); // 5 Hz vibrato
-  lfoGain.gain.setValueAtTime(5, audioCtx.currentTime); //
+  lfoGain.gain.setValueAtTime(2, audioCtx.currentTime); //
   lfo.connect(lfoGain);
   lfoGain.connect(oscillator.frequency);
 
