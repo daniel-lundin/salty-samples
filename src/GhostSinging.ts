@@ -1,18 +1,40 @@
 // C1 - B8
 const notes = [
-  16.35, 17.32, 18.35, 19.45, 20.6, 21.83, 23.12, 24.5, 25.96, 27.5, 29.14,
+  16.35,
+  17.32,
+  18.35,
+  19.45,
+  20.6,
+  21.83,
+  23.12,
+  24.5,
+  25.96,
+  27.5,
+  29.14,
   30.87,
+  16.35 * 2,
+  17.32 * 2,
+  18.35 * 2,
+  19.45 * 2,
+  20.6 * 2,
+  21.83 * 2,
+  23.12 * 2,
+  24.5 * 2,
+  25.96 * 2,
+  27.5 * 2,
+  29.14 * 2,
+  30.87 * 2,
 ];
 
 const spookyScale = [
-  0,
-  2,
   3,
+  5,
   6,
-  7,
-  8,
+  9,
+  10,
   11,
-  12, // C harmonic minor (sharp 4)
+  14,
+  15, // C harmonic minor (sharp 4)
 ];
 
 export function startGhostSinging() {
@@ -83,7 +105,7 @@ export function startGhostSinging() {
     oscillator.stop();
     lfo.stop();
     audioCtx.close();
-    console.log("Stopped ghost song.");
+    console.log("Stopped ghost singing");
   };
 }
 
@@ -91,5 +113,5 @@ function valueToSpookyScale(value: number) {
   // value is 0 - 1
   // map to 0 - length of scale
   const index = Math.floor(value * (spookyScale.length - 1));
-  return notes[spookyScale[index]] * Math.pow(2, 4);
+  return notes[spookyScale[2 * index]] * Math.pow(2, 4);
 }
