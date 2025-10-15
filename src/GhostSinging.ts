@@ -34,7 +34,15 @@ const spookyScale = [
   10,
   11,
   14,
-  15, // C harmonic minor (sharp 4)
+  15,
+  12 + 3,
+  12 + 5,
+  12 + 6,
+  12 + 9,
+  12 + 10,
+  12 + 11,
+  12 + 14,
+  12 + 15,
 ];
 
 export function startGhostSinging() {
@@ -113,5 +121,5 @@ function valueToSpookyScale(value: number) {
   // value is 0 - 1
   // map to 0 - length of scale
   const index = Math.floor(value * (spookyScale.length - 1));
-  return notes[spookyScale[2 * index]] * Math.pow(2, 4);
+  return notes[spookyScale[index]] * Math.pow(2, 4);
 }
