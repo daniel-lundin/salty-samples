@@ -119,11 +119,11 @@ export function startGhostSinging() {
       .catch(console.error);
   }
 
-  setInterval(() => {
-    const value = Math.random();
-    const frequency = valueToSpookyScale(value);
-    oscillator.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.01);
-  }, 1000);
+  // setInterval(() => {
+  //   const value = Math.random();
+  //   const frequency = valueToSpookyScale(value);
+  //   oscillator.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.01);
+  // }, 1000);
   return () => {
     oscillator.stop();
     lfo.stop();
