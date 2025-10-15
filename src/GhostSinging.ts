@@ -74,7 +74,7 @@ export function startGhostSinging() {
     notes[spookyScale[0]] * Math.pow(2, 4),
     audioCtx.currentTime,
   ); // Default frequency
-  gainNode.gain.setValueAtTime(0.01, audioCtx.currentTime);
+  gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
   lfo.frequency.setValueAtTime(5, audioCtx.currentTime); // 5 Hz vibrato
   lfoGain.gain.setValueAtTime(5, audioCtx.currentTime); //
   lfo.connect(lfoGain);
@@ -85,7 +85,7 @@ export function startGhostSinging() {
   oscillator.start();
   lfo.start();
 
-  oscillator.connect(audioCtx.destination);
+  // oscillator.connect(audioCtx.destination);
 
   if (
     "requestPermission" in DeviceOrientationEvent &&
@@ -119,11 +119,11 @@ export function startGhostSinging() {
       .catch(console.error);
   }
 
-  // setInterval(() => {
-  //   const value = Math.random();
-  //   const frequency = valueToSpookyScale(value);
-  //   oscillator.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.01);
-  // }, 1000);
+  setInterval(() => {
+    const value = Math.random();
+    const frequency = valueToSpookyScale(value);
+    oscillator.frequency.setTargetAtTime(frequency, audioCtx.currentTime, 0.01);
+  }, 1000);
   return () => {
     oscillator.stop();
     lfo.stop();
