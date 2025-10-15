@@ -58,7 +58,10 @@ export function startGhostSinging() {
   const lfoGain = audioCtx.createGain();
 
   oscillator.type = "sine";
-  oscillator.frequency.setValueAtTime(440, audioCtx.currentTime); // Default frequency
+  oscillator.frequency.setValueAtTime(
+    notes[0] * Math.pow(2, 4),
+    audioCtx.currentTime,
+  ); // Default frequency
   gainNode.gain.setValueAtTime(0.1, audioCtx.currentTime);
   lfo.frequency.setValueAtTime(5, audioCtx.currentTime); // 5 Hz vibrato
   lfoGain.gain.setValueAtTime(5, audioCtx.currentTime); //
