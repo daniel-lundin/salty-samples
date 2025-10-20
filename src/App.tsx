@@ -10,6 +10,7 @@ import gladPiratSample from "./assets/gladpirat.mp3";
 import vindSample from "./assets/vind.mp3";
 import knarrSample from "./assets/knarr.mp3";
 import temaSample from "./assets/tema-loop.mp3";
+import kalleTeodorSample from "./assets/kalle-teodor.mp3";
 import { startGhostSinging } from "./GhostSinging.ts";
 
 const skeppsKlocka = new SamplePlayer(skeppsKlockaSample);
@@ -20,9 +21,7 @@ const gladPirat = new SamplePlayer(gladPiratSample);
 const knarr = new SamplePlayer(knarrSample);
 const vind = new SamplePlayer(vindSample);
 const temaLoop = new SamplePlayer(temaSample);
-knarr.toggleLooping();
-vind.toggleLooping();
-temaLoop.toggleLooping();
+const kalleTeodor = new SamplePlayer(kalleTeodorSample);
 
 const oneShots = [
   { player: skeppsKlocka, name: "Klocka" },
@@ -52,6 +51,10 @@ const loops = [
     player: temaLoop,
     name: "Tema",
   },
+  {
+    player: kalleTeodor,
+    name: "Kalle Teodor",
+  },
 ];
 
 function App() {
@@ -64,6 +67,7 @@ function App() {
     });
     loops.forEach(({ player }) => {
       player.load();
+      player.toggleLooping();
     });
   }, []);
 
