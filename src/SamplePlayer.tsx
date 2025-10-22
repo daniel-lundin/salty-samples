@@ -7,7 +7,7 @@ export class SamplePlayer {
 
   constructor(
     private mp3Url: string,
-    volume?: number = 1.0,
+    volume: number = 1.0,
   ) {
     this.audioContext = new AudioContext();
     this.volume = volume;
