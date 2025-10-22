@@ -3,9 +3,14 @@ export class SamplePlayer {
   private audioBuffer: AudioBuffer | null = null;
   private isLooping: boolean = false;
   private sourceNodes: AudioBufferSourceNode[] = [];
+  private volume: number;
 
-  constructor(private mp3Url: string) {
+  constructor(
+    private mp3Url: string,
+    volume?: number = 1.0,
+  ) {
     this.audioContext = new AudioContext();
+    this.volume = volume;
   }
 
   async load(): Promise<void> {
@@ -25,7 +30,12 @@ export class SamplePlayer {
     source.loop = this.isLooping;
     source.loopEnd = this.audioBuffer.duration - 0.01; // Slightly before the end to avoid clicks
     source.loopStart = 0.01;
-    source.connect(this.audioContext.destination);
+
+    const gainNode = this.audioContext.createGain();
+    gainNode.gain.setValueAtTime(this.volume, this.audioContext.currentTime);
+    source.connect(gainNode);
+    gainNode.connect(this.audioContext.destination);
+    // source.connect(this.audioContext.destination);
     source.start(0);
 
     // Track the source to stop it later if needed

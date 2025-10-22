@@ -15,7 +15,7 @@ import crowFleeSample from "./assets/kråkor-flyr.mp3";
 import { startGhostSinging } from "./GhostSinging.ts";
 
 const skeppsKlocka = new SamplePlayer(skeppsKlockaSample);
-const kanon = new SamplePlayer(kanonSample);
+const kanon = new SamplePlayer(kanonSample, 3);
 const toapapper = new SamplePlayer(toapapperSample);
 const gladPirat = new SamplePlayer(gladPiratSample);
 const crowFlee = new SamplePlayer(crowFleeSample);
