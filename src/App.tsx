@@ -14,11 +14,11 @@ import kalleTeodorSample from "./assets/kalle-teodor.mp3";
 import crowFleeSample from "./assets/kråkor-flyr.mp3";
 import { startGhostSinging } from "./GhostSinging.ts";
 
-const skeppsKlocka = new SamplePlayer(skeppsKlockaSample);
-const kanon = new SamplePlayer(kanonSample, 3);
+const skeppsKlocka = new SamplePlayer(skeppsKlockaSample, 0.7);
+const kanon = new SamplePlayer(kanonSample, 2);
 const toapapper = new SamplePlayer(toapapperSample);
 const gladPirat = new SamplePlayer(gladPiratSample);
-const crowFlee = new SamplePlayer(crowFleeSample);
+const crowFlee = new SamplePlayer(crowFleeSample, 0.5);
 
 const knarr = new SamplePlayer(knarrSample);
 const vind = new SamplePlayer(vindSample);

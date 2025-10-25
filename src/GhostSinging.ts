@@ -81,7 +81,38 @@ export function startGhostSinging() {
   lfoGain.connect(oscillator.frequency);
 
   oscillator.connect(gainNode);
-  gainNode.connect(audioCtx.destination);
+
+  const reverbInput = audioCtx.createGain();
+  const reverbOutput = audioCtx.createGain();
+
+  const delay1 = audioCtx.createDelay();
+  delay1.delayTime.value = 0.23; // 30 ms
+
+  const delay2 = audioCtx.createDelay();
+  delay2.delayTime.value = 0.045; // 45 ms
+
+  const feedback = audioCtx.createGain();
+  feedback.gain.value = 0.4;
+
+  const mix = audioCtx.createGain();
+  mix.gain.value = 0.5;
+
+  // feedback loop
+  delay1.connect(delay2);
+  delay2.connect(feedback);
+  feedback.connect(delay1);
+
+  // routing
+  reverbInput.connect(delay1);
+  reverbInput.connect(reverbOutput); // dry
+
+  delay2.connect(mix);
+
+  mix.connect(reverbOutput); // wet
+
+  gainNode.connect(reverbInput);
+  reverbOutput.connect(audioCtx.destination);
+
   oscillator.start();
   lfo.start();
 
