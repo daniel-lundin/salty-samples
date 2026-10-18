@@ -64,6 +64,7 @@ const loops = [
 ];
 
 function App() {
+  const isSpaceTheme = /(?:^|\/)26(?:\/|$)/.test(window.location.pathname);
   const [loopsPlaying, setLoopsPlaying] = useState<boolean[]>(
     loops.map(() => false),
   );
@@ -88,16 +89,26 @@ function App() {
   }
 
   return (
-    <>
-      <header>
-        <h1>SaltySamples</h1>
+    <main
+      className={`app-shell ${isSpaceTheme ? "theme-space" : "theme-pirate"}`}
+    >
+      <header className="app-header">
+        <p className="eyebrow">
+          {isSpaceTheme ? "GALAKTISK LJUDPANEL" : "PIRATERNAS LJUDPANEL"}
+        </p>
+        <h1>{isSpaceTheme ? "Cosmic Samples" : "SaltySamples"}</h1>
+        <p className="tagline">
+          {isSpaceTheme
+            ? "Signaler från en avlägsen galax"
+            : "Ljud från de sju haven"}
+        </p>
       </header>
       <div className="container">
         <div className="section">
           <div className="section-header">
-            <div className="rope-line"></div>
-            <h2>Ljud</h2>
-            <div className="rope-line"></div>
+            <div className="section-rule"></div>
+            <h2>{isSpaceTheme ? "Signaler" : "Ljud"}</h2>
+            <div className="section-rule"></div>
           </div>
           <div className="buttons">
             {oneShots.map(({ player, name }) => (
@@ -110,9 +121,9 @@ function App() {
 
         <div className="section">
           <div className="section-header">
-            <div className="rope-line"></div>
-            <h2>Bakgrunder</h2>
-            <div className="rope-line"></div>
+            <div className="section-rule"></div>
+            <h2>{isSpaceTheme ? "Omgivning" : "Bakgrunder"}</h2>
+            <div className="section-rule"></div>
           </div>
           <div className="buttons">
             {loops.map(({ player, name }, index) => (
@@ -139,12 +150,12 @@ function App() {
                 toggleGhostSinging();
               }}
             >
-              Spöksång
+              {isSpaceTheme ? "Utomjordisk sång" : "Spöksång"}
             </button>
           </div>
         </div>
       </div>
-    </>
+    </main>
   );
 }
 
