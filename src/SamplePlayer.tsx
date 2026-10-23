@@ -1,3 +1,5 @@
+import { watchAudioContext } from "./AudioLifecycle.ts";
+
 export class SamplePlayer {
   private audioContext: AudioContext;
   private audioBuffer: AudioBuffer | null = null;
@@ -24,6 +26,18 @@ export class SamplePlayer {
       console.warn("Audio not loaded yet. Call load() first.");
       return;
     }
+
+    watchAudioContext(this.audioContext);
+    if (this.audioContext.state !== "running") {
+      void this.audioContext.resume().then(() => this.startPlayback()).catch(() => {});
+      return;
+    }
+
+    this.startPlayback();
+  }
+
+  private startPlayback(): void {
+    if (!this.audioBuffer) return;
 
     const source = this.audioContext.createBufferSource();
     source.buffer = this.audioBuffer;
@@ -62,7 +76,8 @@ export class SamplePlayer {
   }
 
   async resumeContextIfNeeded(): Promise<void> {
-    if (this.audioContext.state === "suspended") {
+    watchAudioContext(this.audioContext);
+    if (this.audioContext.state !== "running" && this.audioContext.state !== "closed") {
       await this.audioContext.resume();
     }
   }

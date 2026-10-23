@@ -13,6 +13,16 @@ import temaSample from "./assets/tema-loop.mp3";
 import kalleTeodorSample from "./assets/kalle-teodor.mp3";
 import crowFleeSample from "./assets/kråkor-flyr.mp3";
 import { startGhostSinging } from "./GhostSinging.ts";
+import { playSpaceLaser } from "./SpaceLaser.ts";
+import { startAlienSinging } from "./AlienSinging.ts";
+import { startSignalAmbience } from "./SignalAmbience.ts";
+import {
+  startAlienChorus,
+  startRadioStatic,
+  startUfoDrone,
+  playAlienTransmission,
+  playRadiationCounter,
+} from "./SpaceSounds.ts";
 
 const skeppsKlocka = new SamplePlayer(skeppsKlockaSample, 0.7);
 const kanon = new SamplePlayer(kanonSample, 2);
@@ -62,23 +72,59 @@ const loops = [
     name: "Kalle Teodor",
   },
 ];
+const spaceAmbiences = [
+  { key: "ufo", label: "UFO-drönare", start: startUfoDrone },
+  { key: "chorus", label: "Alienkör", start: startAlienChorus },
+  { key: "static", label: "Rymdradio", start: startRadioStatic },
+  { key: "singing", label: "Alien sång", start: startAlienSinging },
+];
 
 function App() {
   const isSpaceTheme = /(?:^|\/)26(?:\/|$)/.test(window.location.pathname);
   const [loopsPlaying, setLoopsPlaying] = useState<boolean[]>(
     loops.map(() => false),
   );
+  const ambienceStops = useRef<Record<string, () => void>>({});
+  const signalAmbienceStop = useRef<(() => void) | null>(null);
+  const pendingAmbiences = useRef(new Set<string>());
+  const [ambiencesPlaying, setAmbiencesPlaying] = useState<Record<string, boolean>>({});
+  const [signalsPlaying, setSignalsPlaying] = useState(false);
   useEffect(() => {
-    oneShots.forEach(({ player }) => {
-      player.load();
-    });
-    loops.forEach(({ player }) => {
-      player.load();
-      player.toggleLooping();
-    });
-  }, []);
+    if (!isSpaceTheme) {
+      oneShots.forEach(({ player }) => {
+        player.load();
+      });
+      loops.forEach(({ player }) => {
+        player.load();
+        player.toggleLooping();
+      });
+    }
+
+    return () => {
+      Object.values(ambienceStops.current).forEach((stop) => stop());
+      signalAmbienceStop.current?.();
+    };
+  }, [isSpaceTheme]);
 
   const ghostSinging = useRef<() => void | null>(null);
+  async function toggleAmbience(key: string, start: () => Promise<() => void>) {
+    const stop = ambienceStops.current[key];
+    if (stop) {
+      stop();
+      delete ambienceStops.current[key];
+      setAmbiencesPlaying((playing) => ({ ...playing, [key]: false }));
+      return;
+    }
+    if (pendingAmbiences.current.has(key)) return;
+    pendingAmbiences.current.add(key);
+    try {
+      const stopAmbience = await start();
+      ambienceStops.current[key] = stopAmbience;
+      setAmbiencesPlaying((playing) => ({ ...playing, [key]: true }));
+    } finally {
+      pendingAmbiences.current.delete(key);
+    }
+  }
   function toggleGhostSinging() {
     if (ghostSinging.current) {
       ghostSinging.current();
@@ -111,11 +157,37 @@ function App() {
             <div className="section-rule"></div>
           </div>
           <div className="buttons">
-            {oneShots.map(({ player, name }) => (
+            {!isSpaceTheme && oneShots.map(({ player, name }) => (
               <button key={name} onClick={() => player.play()}>
                 {name}
               </button>
             ))}
+            {isSpaceTheme && (
+              <>
+                <button onClick={() => void playSpaceLaser()}>Rymdlaser</button>
+                <button onClick={() => void playRadiationCounter()}>
+                  Strålningsmätare
+                </button>
+                <button onClick={() => void playAlienTransmission()}>
+                  Alienkontakt
+                </button>
+                <button
+                  className={signalsPlaying ? "playing" : ""}
+                  onClick={() => {
+                    if (signalAmbienceStop.current) {
+                      signalAmbienceStop.current();
+                      signalAmbienceStop.current = null;
+                      setSignalsPlaying(false);
+                    } else {
+                      signalAmbienceStop.current = startSignalAmbience();
+                      setSignalsPlaying(true);
+                    }
+                  }}
+                >
+                  {signalsPlaying ? <PauseIcon /> : <PlayIcon />} Slumpmässiga signaler
+                </button>
+              </>
+            )}
           </div>
         </div>
 
@@ -126,7 +198,7 @@ function App() {
             <div className="section-rule"></div>
           </div>
           <div className="buttons">
-            {loops.map(({ player, name }, index) => (
+            {!isSpaceTheme && loops.map(({ player, name }, index) => (
               <button
                 key={name}
                 className={loopsPlaying[index] ? "playing" : ""}
@@ -145,13 +217,22 @@ function App() {
                 {loopsPlaying[index] ? <PauseIcon /> : <PlayIcon />} {name}
               </button>
             ))}
-            <button
+            {isSpaceTheme && spaceAmbiences.map(({ key, label, start }) => (
+              <button
+                key={key}
+                className={ambiencesPlaying[key] ? "playing" : ""}
+                onClick={() => void toggleAmbience(key, start)}
+              >
+                {ambiencesPlaying[key] ? <PauseIcon /> : <PlayIcon />} {label}
+              </button>
+            ))}
+            {!isSpaceTheme && <button
               onClick={() => {
                 toggleGhostSinging();
               }}
             >
-              {isSpaceTheme ? "Utomjordisk sång" : "Spöksång"}
-            </button>
+              Spöksång
+            </button>}
           </div>
         </div>
       </div>

@@ -1,3 +1,5 @@
+import { watchAudioContext } from "./AudioLifecycle.ts";
+
 // C1 - B8
 const notes = [
   16.35,
@@ -64,6 +66,7 @@ export function startGhostSinging() {
 
   // Create a sinewave osciallator with a connected LFO for vibrato
   const audioCtx = new window.AudioContext();
+  watchAudioContext(audioCtx);
   const oscillator = audioCtx.createOscillator();
   const gainNode = audioCtx.createGain();
   const lfo = audioCtx.createOscillator();
