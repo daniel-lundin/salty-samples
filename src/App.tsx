@@ -6,6 +6,8 @@ import skeppsKlockaSample from "./assets/skeppsklocka.mp3";
 import kanonSample from "./assets/kanon.mp3";
 import toapapperSample from "./assets/toapapper.mp3";
 import gladPiratSample from "./assets/gladpirat.mp3";
+import alienRoarSample from "./assets/alien-roar.mp3";
+import cantinaBandSample from "./assets/cantina-band.mp3";
 
 import vindSample from "./assets/vind.mp3";
 import knarrSample from "./assets/knarr.mp3";
@@ -18,10 +20,10 @@ import { startAlienSinging } from "./AlienSinging.ts";
 import { startSignalAmbience } from "./SignalAmbience.ts";
 import {
   startAlienChorus,
-  startRadioStatic,
+  startRadioSynth,
   startUfoDrone,
   playAlienTransmission,
-  playRadiationCounter,
+  startRadiationCounterAmbience,
 } from "./SpaceSounds.ts";
 
 const skeppsKlocka = new SamplePlayer(skeppsKlockaSample, 0.7);
@@ -29,6 +31,8 @@ const kanon = new SamplePlayer(kanonSample, 2);
 const toapapper = new SamplePlayer(toapapperSample);
 const gladPirat = new SamplePlayer(gladPiratSample);
 const crowFlee = new SamplePlayer(crowFleeSample, 0.5);
+const alienRoar = new SamplePlayer(alienRoarSample, 1.05);
+const cantinaBand = new SamplePlayer(cantinaBandSample, 0.72);
 
 const knarr = new SamplePlayer(knarrSample);
 const vind = new SamplePlayer(vindSample);
@@ -75,9 +79,17 @@ const loops = [
 const spaceAmbiences = [
   { key: "ufo", label: "UFO-drönare", start: startUfoDrone },
   { key: "chorus", label: "Alienkör", start: startAlienChorus },
-  { key: "static", label: "Rymdradio", start: startRadioStatic },
-  { key: "singing", label: "Alien sång", start: startAlienSinging },
+  { key: "radio", label: "Rymdradio", start: startRadioSynth },
+  { key: "radiation", label: "Strålningsmätare", start: startRadiationCounterAmbience },
+  { key: "singing", label: "Aliensång", start: startAlienSinging },
+  { key: "cantina", label: "Cantina Band", start: startCantinaBand },
 ];
+
+async function startCantinaBand(): Promise<() => void> {
+  await cantinaBand.resumeContextIfNeeded();
+  cantinaBand.play();
+  return () => cantinaBand.stopAll();
+}
 
 type Theme = "pirate" | "space";
 const themeStorageKey = "salty-samples-theme";
@@ -107,12 +119,18 @@ function App() {
     oneShots.forEach(({ player }) => {
       void player.load();
     });
+    void alienRoar.load();
+    void cantinaBand.load();
+    cantinaBand.setLooping(true);
     loops.forEach(({ player }) => {
       void player.load();
       player.setLooping(true);
     });
 
     return () => {
+      oneShots.forEach(({ player }) => player.stopAll());
+      alienRoar.stopAll();
+      cantinaBand.stopAll();
       loops.forEach(({ player }) => player.stopAll());
       Object.values(ambienceStops.current).forEach((stop) => stop());
       signalAmbienceStop.current?.();
@@ -132,6 +150,8 @@ function App() {
     if (nextTheme === theme) return;
     ambienceEpoch.current += 1;
     oneShots.forEach(({ player }) => player.stopAll());
+    alienRoar.stopAll();
+    cantinaBand.stopAll();
     loops.forEach(({ player }) => player.stopAll());
     setLoopsPlaying(loops.map(() => false));
     Object.values(ambienceStops.current).forEach((stop) => stop());
@@ -243,11 +263,11 @@ function App() {
             {isSpaceTheme && (
               <>
                 <button onClick={() => void playSpaceLaser()}>Rymdlaser</button>
-                <button onClick={() => void playRadiationCounter()}>
-                  Strålningsmätare
-                </button>
                 <button onClick={() => void playAlienTransmission()}>
                   Alienkontakt
+                </button>
+                <button className="jump-scare" onClick={() => alienRoar.play()}>
+                  Alienvrål!
                 </button>
                 <button
                   className={signalsPlaying ? "playing" : ""}

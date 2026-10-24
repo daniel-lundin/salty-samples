@@ -1,10 +1,7 @@
 import { playSpaceLaser } from "./SpaceLaser.ts";
-import {
-  playAlienTransmission,
-  playRadiationCounter,
-} from "./SpaceSounds.ts";
+import { playAlienTransmission } from "./SpaceSounds.ts";
 
-const signals = [playSpaceLaser, playRadiationCounter, playAlienTransmission];
+const signals = [playSpaceLaser, playAlienTransmission];
 
 /** Play occasional, varied transmissions until the returned stop function is called. */
 export function startSignalAmbience(): () => void {

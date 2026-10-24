@@ -41,6 +41,25 @@ export async function playRadiationCounter(): Promise<void> {
   });
 }
 
+/** Play occasional counter bursts until the returned stop function is called. */
+export async function startRadiationCounterAmbience(): Promise<() => void> {
+  await getAudioContext();
+  let timer: number | undefined;
+  let stopped = false;
+
+  const playNextBurst = () => {
+    if (stopped) return;
+    void playRadiationCounter();
+    timer = window.setTimeout(playNextBurst, 4200 + Math.random() * 3800);
+  };
+
+  timer = window.setTimeout(playNextBurst, 900 + Math.random() * 2300);
+  return () => {
+    stopped = true;
+    if (timer !== undefined) window.clearTimeout(timer);
+  };
+}
+
 /** A short, wavering alien transmission with a descending, vocal-like tone. */
 export async function playAlienTransmission(): Promise<void> {
   const audio = await getAudioContext();
@@ -193,41 +212,77 @@ export async function startAlienChorus(): Promise<() => void> {
   };
 }
 
-/** A quiet, filtered radio hiss with slow movement in the signal. */
-export async function startRadioStatic(): Promise<() => void> {
+/** An eerie, slowly drifting FM synth signal for the space radio bed. */
+export async function startRadioSynth(): Promise<() => void> {
   const audio = await getAudioContext();
   const now = audio.currentTime;
-  const buffer = audio.createBuffer(1, audio.sampleRate * 2, audio.sampleRate);
-  const samples = buffer.getChannelData(0);
-  for (let i = 0; i < samples.length; i += 1) {
-    samples[i] = Math.random() * 2 - 1;
-  }
-
-  const noise = audio.createBufferSource();
-  const bandpass = audio.createBiquadFilter();
-  const lowpass = audio.createBiquadFilter();
+  const carrierA = audio.createOscillator();
+  const carrierB = audio.createOscillator();
+  const modulatorA = audio.createOscillator();
+  const modulatorB = audio.createOscillator();
+  const slowDrift = audio.createOscillator();
+  const panDrift = audio.createOscillator();
+  const depthA = audio.createGain();
+  const depthB = audio.createGain();
+  const driftA = audio.createGain();
+  const driftB = audio.createGain();
+  const filter = audio.createBiquadFilter();
   const output = audio.createGain();
-  const wobble = audio.createOscillator();
-  const wobbleDepth = audio.createGain();
-  noise.buffer = buffer;
-  noise.loop = true;
-  bandpass.type = "bandpass";
-  bandpass.frequency.value = 1250;
-  bandpass.Q.value = 0.65;
-  lowpass.type = "lowpass";
-  lowpass.frequency.value = 2600;
+  const delay = audio.createDelay(0.8);
+  const echoGain = audio.createGain();
+  const feedback = audio.createGain();
+  const panner = audio.createStereoPanner();
+  const panDepth = audio.createGain();
+
+  carrierA.type = "sine";
+  carrierA.frequency.value = 172;
+  carrierB.type = "triangle";
+  carrierB.frequency.value = 247;
+  modulatorA.type = "sine";
+  modulatorA.frequency.value = 47;
+  modulatorB.type = "sine";
+  modulatorB.frequency.value = 68.5;
+  depthA.gain.value = 118;
+  depthB.gain.value = 156;
+  slowDrift.type = "sine";
+  slowDrift.frequency.value = 0.11;
+  driftA.gain.value = 32;
+  driftB.gain.value = 44;
+  panDrift.type = "sine";
+  panDrift.frequency.value = 0.075;
+  panDepth.gain.value = 0.72;
+
+  filter.type = "lowpass";
+  filter.frequency.value = 1900;
+  filter.Q.value = 1.4;
   output.gain.setValueAtTime(0.0001, now);
-  output.gain.exponentialRampToValueAtTime(0.035, now + 1.4);
-  wobble.frequency.value = 0.16;
-  wobbleDepth.gain.value = 750;
-  wobble.connect(wobbleDepth);
-  wobbleDepth.connect(bandpass.frequency);
-  noise.connect(bandpass);
-  bandpass.connect(lowpass);
-  lowpass.connect(output);
-  output.connect(audio.destination);
-  noise.start(now);
-  wobble.start(now);
+  output.gain.exponentialRampToValueAtTime(0.12, now + 1.6);
+  echoGain.gain.value = 0.2;
+  feedback.gain.value = 0.24;
+  delay.delayTime.value = 0.34;
+
+  modulatorA.connect(depthA);
+  depthA.connect(carrierA.frequency);
+  modulatorB.connect(depthB);
+  depthB.connect(carrierB.frequency);
+  slowDrift.connect(driftA);
+  slowDrift.connect(driftB);
+  driftA.connect(depthA.gain);
+  driftB.connect(depthB.gain);
+  carrierA.connect(filter);
+  carrierB.connect(filter);
+  filter.connect(output);
+  output.connect(panner);
+  panner.connect(audio.destination);
+  panner.connect(delay);
+  delay.connect(echoGain);
+  echoGain.connect(panner);
+  echoGain.connect(feedback);
+  feedback.connect(delay);
+  panDrift.connect(panDepth);
+  panDepth.connect(panner.pan);
+
+  [carrierA, carrierB, modulatorA, modulatorB, slowDrift, panDrift].forEach((oscillator) => oscillator.start(now));
 
   let stopped = false;
   return () => {
@@ -235,15 +290,20 @@ export async function startRadioStatic(): Promise<() => void> {
     stopped = true;
     const stopAt = audio.currentTime;
     output.gain.cancelScheduledValues(stopAt);
-    output.gain.setTargetAtTime(0.0001, stopAt, 0.45);
-    noise.stop(stopAt + 2.5);
-    wobble.stop(stopAt + 2.5);
+    output.gain.setTargetAtTime(0.0001, stopAt, 0.55);
+    [carrierA, carrierB, modulatorA, modulatorB, slowDrift, panDrift].forEach((oscillator) => oscillator.stop(stopAt + 3));
     window.setTimeout(() => {
-      noise.disconnect();
-      bandpass.disconnect();
-      lowpass.disconnect();
+      filter.disconnect();
       output.disconnect();
-      wobbleDepth.disconnect();
-    }, 3000);
+      delay.disconnect();
+      echoGain.disconnect();
+      feedback.disconnect();
+      panner.disconnect();
+      depthA.disconnect();
+      depthB.disconnect();
+      driftA.disconnect();
+      driftB.disconnect();
+      panDepth.disconnect();
+    }, 3500);
   };
 }
