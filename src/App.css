@@ -56,6 +56,30 @@
 .eyebrow { font-size: .75rem; letter-spacing: .24em; opacity: .82; }
 .tagline { margin-top: .45rem; opacity: .78; }
 
+.theme-switcher {
+  display: inline-flex;
+  gap: .25rem;
+  margin-top: 1rem;
+  padding: .25rem;
+  border-radius: 999px;
+}
+.theme-switcher button {
+  min-width: 5.5rem;
+  padding: .55rem 1rem;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-size: .9rem;
+  cursor: pointer;
+}
+.theme-switcher button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.theme-pirate .theme-switcher { border: 1px solid rgba(245, 232, 199, .45); background: rgba(30, 19, 10, .68); }
+.theme-pirate .theme-switcher button.selected { border-color: #d2b48c; background: linear-gradient(145deg, #8b5a2b, #5a3718); }
+.theme-space .theme-switcher { border: 1px solid rgba(154, 244, 238, .42); background: rgba(5, 14, 34, .72); }
+.theme-space .theme-switcher button.selected { border-color: rgba(154, 244, 238, .85); background: linear-gradient(145deg, #315b83, #29336d); box-shadow: 0 0 14px rgba(101, 216, 210, .3); }
+
 .container {
   width: min(100%, 850px);
   margin: 0 auto;

@@ -66,6 +66,10 @@ export class SamplePlayer {
     console.log(`Looping is now ${this.isLooping ? "enabled" : "disabled"}`);
   }
 
+  setLooping(looping: boolean): void {
+    this.isLooping = looping;
+  }
+
   stopAll(): void {
     this.sourceNodes.forEach((source) => source.stop());
     this.sourceNodes = [];

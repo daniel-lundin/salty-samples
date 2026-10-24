@@ -23,6 +23,8 @@ export default defineConfig({
         name: "SaltySamples",
         short_name: "SaltySamples",
         description: "SaltySamples",
+        start_url: "/salty-samples/",
+        scope: "/salty-samples/",
         theme_color: "#0c0c0c",
         icons: [
           {

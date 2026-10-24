@@ -79,34 +79,72 @@ const spaceAmbiences = [
   { key: "singing", label: "Alien sång", start: startAlienSinging },
 ];
 
+type Theme = "pirate" | "space";
+const themeStorageKey = "salty-samples-theme";
+
+function getSavedTheme(): Theme {
+  try {
+    return localStorage.getItem(themeStorageKey) === "space" ? "space" : "pirate";
+  } catch {
+    return "pirate";
+  }
+}
+
 function App() {
-  const isSpaceTheme = /(?:^|\/)26(?:\/|$)/.test(window.location.pathname);
+  const [theme, setTheme] = useState<Theme>(getSavedTheme);
+  const isSpaceTheme = theme === "space";
   const [loopsPlaying, setLoopsPlaying] = useState<boolean[]>(
     loops.map(() => false),
   );
   const ambienceStops = useRef<Record<string, () => void>>({});
   const signalAmbienceStop = useRef<(() => void) | null>(null);
   const pendingAmbiences = useRef(new Set<string>());
+  const ambienceEpoch = useRef(0);
+  const ghostSinging = useRef<() => void | null>(null);
   const [ambiencesPlaying, setAmbiencesPlaying] = useState<Record<string, boolean>>({});
   const [signalsPlaying, setSignalsPlaying] = useState(false);
   useEffect(() => {
-    if (!isSpaceTheme) {
-      oneShots.forEach(({ player }) => {
-        player.load();
-      });
-      loops.forEach(({ player }) => {
-        player.load();
-        player.toggleLooping();
-      });
-    }
+    oneShots.forEach(({ player }) => {
+      void player.load();
+    });
+    loops.forEach(({ player }) => {
+      void player.load();
+      player.setLooping(true);
+    });
 
     return () => {
+      loops.forEach(({ player }) => player.stopAll());
       Object.values(ambienceStops.current).forEach((stop) => stop());
       signalAmbienceStop.current?.();
+      ghostSinging.current?.();
     };
-  }, [isSpaceTheme]);
+  }, []);
 
-  const ghostSinging = useRef<() => void | null>(null);
+  useEffect(() => {
+    try {
+      localStorage.setItem(themeStorageKey, theme);
+    } catch {
+      // Keep the selected theme for this session if storage is unavailable.
+    }
+  }, [theme]);
+
+  function selectTheme(nextTheme: Theme) {
+    if (nextTheme === theme) return;
+    ambienceEpoch.current += 1;
+    oneShots.forEach(({ player }) => player.stopAll());
+    loops.forEach(({ player }) => player.stopAll());
+    setLoopsPlaying(loops.map(() => false));
+    Object.values(ambienceStops.current).forEach((stop) => stop());
+    ambienceStops.current = {};
+    setAmbiencesPlaying({});
+    signalAmbienceStop.current?.();
+    signalAmbienceStop.current = null;
+    setSignalsPlaying(false);
+    ghostSinging.current?.();
+    ghostSinging.current = null;
+    setTheme(nextTheme);
+  }
+
   async function toggleAmbience(key: string, start: () => Promise<() => void>) {
     const stop = ambienceStops.current[key];
     if (stop) {
@@ -117,8 +155,13 @@ function App() {
     }
     if (pendingAmbiences.current.has(key)) return;
     pendingAmbiences.current.add(key);
+    const startEpoch = ambienceEpoch.current;
     try {
       const stopAmbience = await start();
+      if (startEpoch !== ambienceEpoch.current) {
+        stopAmbience();
+        return;
+      }
       ambienceStops.current[key] = stopAmbience;
       setAmbiencesPlaying((playing) => ({ ...playing, [key]: true }));
     } finally {
@@ -148,6 +191,24 @@ function App() {
             ? "Signaler från en avlägsen galax"
             : "Ljud från de sju haven"}
         </p>
+        <nav className="theme-switcher" aria-label="Välj tema">
+          <button
+            type="button"
+            aria-pressed={!isSpaceTheme}
+            className={!isSpaceTheme ? "selected" : ""}
+            onClick={() => selectTheme("pirate")}
+          >
+            Pirat
+          </button>
+          <button
+            type="button"
+            aria-pressed={isSpaceTheme}
+            className={isSpaceTheme ? "selected" : ""}
+            onClick={() => selectTheme("space")}
+          >
+            Rymd
+          </button>
+        </nav>
       </header>
       <div className="container">
         <div className="section">
