@@ -11,21 +11,22 @@
 }
 
 .theme-space {
-  --accent: #9af4ee;
-  --accent-strong: #65d8d2;
-  --ink: #e7f9ff;
-  --panel: rgba(9, 18, 42, .78);
+  --accent: #ffab59;
+  --accent-strong: #c8ff70;
+  --ink: #fff0e2;
+  --panel: rgba(14, 12, 34, .82);
   color: var(--ink);
   background:
-    radial-gradient(ellipse at 16% 18%, rgba(85, 58, 145, .44), transparent 34%),
-    radial-gradient(ellipse at 88% 75%, rgba(15, 112, 135, .3), transparent 34%),
+    radial-gradient(circle at 83% 27%, rgba(255, 111, 58, .62) 0 4%, rgba(166, 57, 116, .28) 4.2% 9%, transparent 9.5%),
+    radial-gradient(ellipse at 16% 18%, rgba(111, 45, 135, .5), transparent 34%),
+    radial-gradient(ellipse at 88% 75%, rgba(105, 132, 36, .24), transparent 34%),
     radial-gradient(1px 1px at 15% 18%, #fff 98%, transparent),
     radial-gradient(1px 1px at 78% 23%, #fff 98%, transparent),
     radial-gradient(2px 2px at 42% 68%, #b6f8ff 98%, transparent),
     radial-gradient(1px 1px at 91% 48%, #fff 98%, transparent),
     radial-gradient(1px 1px at 29% 83%, #fff 98%, transparent),
-    linear-gradient(145deg, #080d22, #111935 55%, #090d1e);
-  background-size: auto, auto, 210px 190px, 280px 230px, 310px 260px, 190px 220px, 250px 300px, auto;
+    linear-gradient(145deg, #090714, #17102b 55%, #080b16);
+  background-size: auto, auto, auto, 210px 190px, 280px 230px, 310px 260px, 190px 220px, 250px 300px, auto;
   font-family: "Trebuchet MS", Arial, sans-serif;
 }
 
@@ -47,9 +48,9 @@
 }
 
 .theme-space .app-header h1 {
-  color: #edfcff;
+  color: #fff1e8;
   letter-spacing: .045em;
-  text-shadow: 0 0 12px rgba(118, 245, 239, .8), 0 0 34px rgba(119, 92, 255, .65);
+  text-shadow: 0 0 12px rgba(255, 135, 75, .75), 0 0 34px rgba(158, 75, 214, .68);
 }
 
 .eyebrow, .tagline { margin: 0; }
@@ -77,8 +78,8 @@
 .theme-switcher button:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
 .theme-pirate .theme-switcher { border: 1px solid rgba(245, 232, 199, .45); background: rgba(30, 19, 10, .68); }
 .theme-pirate .theme-switcher button.selected { border-color: #d2b48c; background: linear-gradient(145deg, #8b5a2b, #5a3718); }
-.theme-space .theme-switcher { border: 1px solid rgba(154, 244, 238, .42); background: rgba(5, 14, 34, .72); }
-.theme-space .theme-switcher button.selected { border-color: rgba(154, 244, 238, .85); background: linear-gradient(145deg, #315b83, #29336d); box-shadow: 0 0 14px rgba(101, 216, 210, .3); }
+.theme-space .theme-switcher { border: 1px solid rgba(255, 171, 89, .5); background: rgba(14, 10, 28, .78); }
+.theme-space .theme-switcher button.selected { border-color: rgba(200, 255, 112, .8); background: linear-gradient(145deg, #674531, #3d2c59); box-shadow: 0 0 14px rgba(255, 135, 75, .26); }
 
 .container {
   width: min(100%, 850px);
@@ -103,8 +104,8 @@
 }
 
 .theme-space .section-rule {
-  background: linear-gradient(90deg, transparent, rgba(154, 244, 238, .9), transparent);
-  box-shadow: 0 0 10px rgba(101, 216, 210, .4);
+  background: linear-gradient(90deg, transparent, rgba(255, 171, 89, .92), rgba(200, 255, 112, .6), transparent);
+  box-shadow: 0 0 10px rgba(255, 135, 75, .32);
 }
 
 .buttons { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; width: 100%; }
@@ -133,23 +134,64 @@
 }
 
 .theme-space .buttons button {
-  color: #efffff;
+  color: #fff2e9;
   font-size: .98rem;
   font-weight: 650;
-  border: 1px solid rgba(154, 244, 238, .65);
-  background: linear-gradient(145deg, rgba(38, 69, 111, .94), rgba(20, 35, 71, .96));
-  box-shadow: inset 0 1px rgba(255,255,255,.15), 0 0 18px rgba(31, 187, 195, .14), 0 5px 16px rgba(0,0,0,.28);
+  border: 1px solid rgba(255, 171, 89, .68);
+  background: linear-gradient(145deg, rgba(65, 43, 89, .96), rgba(27, 24, 52, .98));
+  box-shadow: inset 0 1px rgba(255,255,255,.15), 0 0 18px rgba(173, 81, 180, .18), 0 5px 16px rgba(0,0,0,.32);
 }
 
 .theme-space .buttons button.playing {
-  border-color: #c7a4ff;
-  background: linear-gradient(145deg, #604fa5, #293f83);
-  box-shadow: 0 0 18px rgba(167, 134, 255, .45);
+  border-color: #d4ff7a;
+  background: linear-gradient(145deg, #715037, #44305f);
+  box-shadow: 0 0 18px rgba(199, 255, 112, .28);
 }
+
+.theme-space.app-shell { position: relative; isolation: isolate; overflow: hidden; }
+.theme-space .app-header, .theme-space .container { position: relative; z-index: 1; }
+.area-sign {
+  position: absolute;
+  z-index: 0;
+  top: 43%;
+  right: max(1rem, calc((100vw - 1080px) / 2));
+  width: 238px;
+  padding: 10px 13px 12px;
+  transform: rotate(5deg);
+  border: 2px solid rgba(255, 164, 79, .86);
+  border-radius: 5px;
+  color: #ffd39b;
+  background: linear-gradient(145deg, rgba(35, 18, 35, .94), rgba(14, 11, 24, .96));
+  box-shadow: 0 0 22px rgba(255, 103, 48, .25), inset 0 0 14px rgba(255, 158, 77, .08);
+  opacity: .7;
+  pointer-events: none;
+}
+.area-sign::before, .area-sign::after {
+  position: absolute;
+  right: 6px;
+  left: 6px;
+  height: 5px;
+  content: "";
+  background: repeating-linear-gradient(135deg, #ffad59 0 8px, #24182b 8px 16px);
+}
+.area-sign::before { top: 5px; }
+.area-sign::after { bottom: 5px; }
+.area-sign-header, .area-sign-footer { display: flex; align-items: center; justify-content: space-between; }
+.area-sign-header { margin-top: 8px; color: #c8ff70; font-size: .58rem; font-weight: 800; letter-spacing: .14em; }
+.area-sign-symbol { color: #ff9351; font-size: 1.1rem; }
+.area-sign-header i { width: 7px; height: 7px; border-radius: 50%; background: #c8ff70; box-shadow: 0 0 9px #c8ff70; }
+.area-sign-title { display: flex; align-items: baseline; justify-content: space-between; margin: 4px 0; color: #fff0dc; font-family: "Trebuchet MS", Arial, sans-serif; line-height: 1; }
+.area-sign-title span { font-size: 1rem; font-weight: 800; letter-spacing: .18em; }
+.area-sign-title strong { color: #ffad59; font-size: 2.2rem; letter-spacing: .04em; text-shadow: 0 0 12px rgba(255, 119, 60, .5); }
+.area-sign-footer { color: rgba(255, 221, 185, .78); font-size: .48rem; font-weight: 700; letter-spacing: .08em; }
 
 @media (max-width: 480px) {
   .container { padding-inline: .8rem; }
   .buttons { gap: .65rem; }
   .buttons button { padding: 12px 8px 12px 27px; font-size: .88rem; }
   .buttons button svg { left: 8px; }
+}
+
+@media (max-width: 1000px) {
+  .area-sign { top: 46%; right: -16px; transform: rotate(5deg) scale(.82); opacity: .28; }
 }

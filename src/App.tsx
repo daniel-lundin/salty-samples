@@ -181,6 +181,23 @@ function App() {
     <main
       className={`app-shell ${isSpaceTheme ? "theme-space" : "theme-pirate"}`}
     >
+      {isSpaceTheme && (
+        <aside className="area-sign" aria-hidden="true">
+          <div className="area-sign-header">
+            <span className="area-sign-symbol">☠</span>
+            <span>CONTAINMENT ZONE</span>
+            <i />
+          </div>
+          <div className="area-sign-title">
+            <span>AREA</span>
+            <strong>57292</strong>
+          </div>
+          <div className="area-sign-footer">
+            <span>UNKNOWN LIFEFORM</span>
+            <span>DO NOT APPROACH</span>
+          </div>
+        </aside>
+      )}
       <header className="app-header">
         <p className="eyebrow">
           {isSpaceTheme ? "GALAKTISK LJUDPANEL" : "PIRATERNAS LJUDPANEL"}
